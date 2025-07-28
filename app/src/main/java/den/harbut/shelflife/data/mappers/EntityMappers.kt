@@ -7,12 +7,12 @@ fun TimerEntity.toDomain(): Timer {
     return Timer(
         id = id,
         productId = productId,
-        groupId = groupId,
         name = name,
-        pageId = pageId,
+        groupId = groupId,
         startTimeMillis = startTimeMillis,
+        durationMillis = durationMillis,
         isRunning = isRunning,
-        durationMillis = TODO()
+        pageId = pageId
     )
 }
 
@@ -20,11 +20,11 @@ fun Timer.toEntity(): TimerEntity {
     return TimerEntity(
         id = id,
         productId = productId,
+        name = name,
         groupId = groupId,
         pageId = pageId,
         startTimeMillis = startTimeMillis,
-        isRunning = isRunning,
-        name = TODO(),
-        durationMillis = TODO()
+        durationMillis = durationMillis,
+        isRunning = isRunning
     )
 }
