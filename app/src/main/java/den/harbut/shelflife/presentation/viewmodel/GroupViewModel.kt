@@ -2,14 +2,17 @@ package den.harbut.shelflife.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
 import den.harbut.shelflife.domain.model.Group
 import den.harbut.shelflife.domain.usecase.group.*
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class GroupViewModel(
+@HiltViewModel
+class GroupViewModel @Inject constructor(
     private val getGroupsByScreenUseCase: GetGroupsByPageUseCase,
     private val addGroupUseCase: AddGroupUseCase,
     private val updateGroupUseCase: UpdateGroupUseCase,

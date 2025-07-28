@@ -6,8 +6,9 @@ import den.harbut.shelflife.domain.model.Product
 import den.harbut.shelflife.domain.repository.ProductRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import javax.inject.Inject
 
-class ProductRepositoryImpl(
+class ProductRepositoryImpl @Inject constructor(
     private val dao: ProductDao
 ) : ProductRepository {
 

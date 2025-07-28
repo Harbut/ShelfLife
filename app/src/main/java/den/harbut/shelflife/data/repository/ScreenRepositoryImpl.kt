@@ -6,8 +6,9 @@ import den.harbut.shelflife.domain.model.Screen
 import den.harbut.shelflife.domain.repository.ScreenRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import javax.inject.Inject
 
-class ScreenRepositoryImpl(
+class ScreenRepositoryImpl @Inject constructor(
     private val dao: ScreenDao
 ) : ScreenRepository {
 

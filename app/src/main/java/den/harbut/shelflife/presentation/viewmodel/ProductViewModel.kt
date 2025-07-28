@@ -2,14 +2,17 @@ package den.harbut.shelflife.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
 import den.harbut.shelflife.domain.model.Product
 import den.harbut.shelflife.domain.usecase.product.AddProductUseCase
 import den.harbut.shelflife.domain.usecase.product.DeleteProductUseCase
 import den.harbut.shelflife.domain.usecase.product.GetAllProductsUseCase
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class ProductViewModel(
+@HiltViewModel
+class ProductViewModel @Inject constructor(
     private val getAllProductsUseCase: GetAllProductsUseCase,
     private val addProductUseCase: AddProductUseCase,
     private val deleteProductUseCase: DeleteProductUseCase

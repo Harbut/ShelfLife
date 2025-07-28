@@ -6,8 +6,9 @@ import den.harbut.shelflife.domain.model.Timer
 import den.harbut.shelflife.domain.repository.TimerRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import javax.inject.Inject
 
-class TimerRepositoryImpl(
+class TimerRepositoryImpl @Inject constructor(
     private val dao: TimerDao
 ) : TimerRepository {
 

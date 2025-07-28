@@ -6,8 +6,9 @@ import den.harbut.shelflife.domain.model.Group
 import den.harbut.shelflife.domain.repository.GroupRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import javax.inject.Inject
 
-class GroupRepositoryImpl(
+class GroupRepositoryImpl @Inject constructor(
     private val dao: GroupDao
 ) : GroupRepository {
 

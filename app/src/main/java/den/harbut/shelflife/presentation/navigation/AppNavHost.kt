@@ -1,4 +1,3 @@
-
 package den.harbut.shelflife.presentation.navigation
 
 import androidx.compose.runtime.Composable
@@ -6,23 +5,39 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import den.harbut.shelflife.presentation.ui.screens.main.MainScreen
-import den.harbut.shelflife.presentation.viewmodel.TimerViewModel
+import den.harbut.shelflife.presentation.ui.screens.editing.EditingScreen
+import den.harbut.shelflife.presentation.viewmodel.*
 
-// Навігаційний хост, який визначає маршрути між екранами
 @Composable
 fun AppNavHost(
     navController: NavHostController,
-    viewModel: TimerViewModel
+    timerViewModel: TimerViewModel,
+    groupViewModel: GroupViewModel,
+    screenViewModel: ScreenViewModel,
+    productViewModel: ProductViewModel
 ) {
     NavHost(
         navController = navController,
         startDestination = "main"
     ) {
-        // Основний екран, що показує таймери
         composable("main") {
-            MainScreen(groupId = 1L, viewModel = viewModel)
+            MainScreen(
+                timerViewModel = timerViewModel,
+                groupViewModel = groupViewModel,
+                screenViewModel = screenViewModel,
+                onEditClick = {
+                    navController.navigate("editing")
+                }
+            )
         }
 
-        // Інші екрани типу "редагування", "інспектор" тощо можна додати тут
+        composable("editing") {
+            EditingScreen(
+                timerViewModel = timerViewModel,
+                groupViewModel = groupViewModel,
+                screenViewModel = screenViewModel,
+                productViewModel = productViewModel
+            )
+        }
     }
 }
