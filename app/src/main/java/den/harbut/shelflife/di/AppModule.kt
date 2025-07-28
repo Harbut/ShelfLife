@@ -44,22 +44,22 @@ object AppModule {
     // Repositories
     @Provides
     @Singleton
-    fun provideTimerRepository(dao: TimerDao = provideTimerDao(provideDatabase(Application()))): TimerRepository =
+    fun provideTimerRepository(dao: TimerDao): TimerRepository =
         TimerRepositoryImpl(dao)
 
     @Provides
     @Singleton
-    fun provideProductRepository(dao: ProductDao = provideProductDao(provideDatabase(Application()))): ProductRepository =
+    fun provideProductRepository(dao: ProductDao): ProductRepository =
         ProductRepositoryImpl(dao)
 
     @Provides
     @Singleton
-    fun provideGroupRepository(dao: GroupDao = provideGroupDao(provideDatabase(Application()))): GroupRepository =
+    fun provideGroupRepository(dao: GroupDao): GroupRepository =
         GroupRepositoryImpl(dao)
 
     @Provides
     @Singleton
-    fun provideScreenRepository(dao: ScreenDao = provideScreenDao(provideDatabase(Application()))): ScreenRepository =
+    fun provideScreenRepository(dao: ScreenDao): ScreenRepository =
         ScreenRepositoryImpl(dao)
 
     // Timer use cases
@@ -86,18 +86,8 @@ object AppModule {
 
     // ViewModels — можуть використовуватись у HiltViewModel-фабриках
     @Provides fun provideTimerViewModel(
-        getTimersByGroupUseCase: GetTimersByGroupUseCase,
-        addTimerUseCase: AddTimerUseCase,
-        updateTimerUseCase: UpdateTimerUseCase,
-        deleteTimerUseCase: DeleteTimerUseCase,
-        startStopTimerUseCase: StartStopTimerUseCase
-    ) = TimerViewModel(
-        getTimersByGroupUseCase,
-        addTimerUseCase,
-        updateTimerUseCase,
-        deleteTimerUseCase,
-        startStopTimerUseCase
-    )
+        timerRepository: TimerRepository
+    ) = TimerViewModel(timerRepository)
 
     @Provides fun provideProductViewModel(
         getAllProductsUseCase: GetAllProductsUseCase,

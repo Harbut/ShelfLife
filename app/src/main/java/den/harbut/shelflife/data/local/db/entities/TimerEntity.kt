@@ -10,7 +10,7 @@ data class TimerEntity(
     val name: String,
     val groupId: Long,
     val pageId: Long,
-    val startTimeMillis: Boolean,
-    val durationMillis: Boolean,
+    val startTimeMillis: Long,
+    val durationMillis: Long,
     val isRunning: Boolean
 )

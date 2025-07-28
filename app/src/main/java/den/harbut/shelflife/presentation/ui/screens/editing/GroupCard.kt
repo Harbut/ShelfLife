@@ -26,10 +26,9 @@ fun GroupCard(
             .background(Color(android.graphics.Color.parseColor(group.colorHex)))
             .pointerInput(Unit) {
                 detectDragGestures(
-                    onDragStart = { onDrop() },
-                    onDragEnd = {},
-                    onDragCancel = TODO(),
-                    onDrag = TODO()
+                    onDragEnd = { onDrop() },
+                    onDrag = { _, _ -> },
+                    onDragCancel = {}
                 )
             }
             .padding(8.dp)
