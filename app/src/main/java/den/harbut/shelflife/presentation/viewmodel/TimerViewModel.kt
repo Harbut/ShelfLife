@@ -20,12 +20,20 @@ class TimerViewModel @Inject constructor(
     val timers: StateFlow<List<Timer>> = _timers
 
     init {
-        observeTimers()
+        observeAllTimers()
     }
 
-    private fun observeTimers() {
+    fun observeAllTimers() {
         viewModelScope.launch {
             timerRepository.getTimers().collectLatest {
+                _timers.value = it
+            }
+        }
+    }
+
+    fun loadTimers(groupId: Long) {
+        viewModelScope.launch {
+            timerRepository.getTimersByGroup(groupId).collectLatest {
                 _timers.value = it
             }
         }
@@ -45,6 +53,12 @@ class TimerViewModel @Inject constructor(
     fun addTimer(timer: Timer) {
         viewModelScope.launch {
             timerRepository.addTimer(timer)
+        }
+    }
+
+    fun updateTimer(timer: Timer) {
+        viewModelScope.launch {
+            timerRepository.updateTimer(timer)
         }
     }
 

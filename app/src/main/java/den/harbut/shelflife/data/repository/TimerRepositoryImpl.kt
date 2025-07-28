@@ -43,6 +43,12 @@ private fun TimerEntity.toDomain() = Timer(
     pageId
 )
 private fun Timer.toEntity() = TimerEntity(
-    id, productId, name, groupId, startTimeMillis, durationMillis, isRunning,
-    isRunning = TODO()
+    id = id,
+    productId = productId,
+    name = name,
+    groupId = groupId,
+    pageId = pageId,
+    startTimeMillis = startTimeMillis,
+    durationMillis = durationMillis,
+    isRunning = isRunning
 )

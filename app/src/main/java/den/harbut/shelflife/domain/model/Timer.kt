@@ -5,8 +5,8 @@ data class Timer(
     val productId: Long,
     val name: String,
     val groupId: Long,
-    val startTimeMillis: Boolean,
-    val durationMillis: Boolean,
+    val startTimeMillis: Long,
+    val durationMillis: Long,
     val isRunning: Boolean = true,
     val pageId: Long
 ) {

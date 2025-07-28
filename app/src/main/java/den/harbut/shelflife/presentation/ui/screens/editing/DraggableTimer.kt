@@ -26,7 +26,7 @@ fun DraggableTimer(
                     onDragStart = { onDragStart(timer) },
                     onDragEnd = {},
                     onDragCancel = {},
-                    onDrag = TODO()
+                    onDrag = { _, _ -> }
                 )
             }
     ) {
