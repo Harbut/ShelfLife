@@ -1,0 +1,8 @@
+package den.harbut.shelflife.domain.usecase.timer
+
+import den.harbut.shelflife.domain.model.Timer
+import den.harbut.shelflife.domain.repository.TimerRepository
+
+class UpdateTimerUseCase(private val repository: TimerRepository) {
+    suspend operator fun invoke(timer: Timer) = repository.updateTimer(timer)
+}
