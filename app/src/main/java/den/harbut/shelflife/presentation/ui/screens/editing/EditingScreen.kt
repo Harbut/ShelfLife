@@ -104,33 +104,6 @@ fun EditingScreen(
     }
 }
 
-@Composable
-fun ScreenBottomSheetContent() {
-    Column(Modifier.padding(16.dp)) {
-        Text("Додавання нового екрану", style = MaterialTheme.typography.titleMedium)
-        Spacer(modifier = Modifier.height(8.dp))
-        Text("Тут буде форма для створення Screen")
-    }
-}
-
-@Composable
-fun GroupBottomSheetContent() {
-    Column(Modifier.padding(16.dp)) {
-        Text("Додавання нової групи", style = MaterialTheme.typography.titleMedium)
-        Spacer(modifier = Modifier.height(8.dp))
-        Text("Тут буде форма для створення Group")
-    }
-}
-
-@Composable
-fun TimerBottomSheetContent() {
-    Column(Modifier.padding(16.dp)) {
-        Text("Додавання нового таймера", style = MaterialTheme.typography.titleMedium)
-        Spacer(modifier = Modifier.height(8.dp))
-        Text("Тут буде форма для створення Timer")
-    }
-}
-
 data class FabItem(
     val label: String,
     val icon: ImageVector,

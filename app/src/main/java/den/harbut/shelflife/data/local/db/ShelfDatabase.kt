@@ -2,6 +2,7 @@ package den.harbut.shelflife.data.local.db
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
+import androidx.room.TypeConverters
 import den.harbut.shelflife.data.local.db.dao.GroupDao
 import den.harbut.shelflife.data.local.db.dao.ProductDao
 import den.harbut.shelflife.data.local.db.dao.ScreenDao
@@ -20,6 +21,7 @@ import den.harbut.shelflife.data.local.db.entities.TimerEntity
     ],
     version = 1
 )
+@TypeConverters(Converters::class)
 abstract class ShelfDatabase : RoomDatabase() {
     abstract fun timerDao(): TimerDao
     abstract fun productDao(): ProductDao
