@@ -12,4 +12,21 @@ enum class TimeUnit(val label: String, val millisMultiplier: Long) {
             return values().firstOrNull { it.label == label }
         }
     }
+
+    fun toMillis(amount: Long): Long = when (this) {
+        MINUTES -> amount * 60_000L
+        HOURS -> amount * 60 * 60 * 1000L
+        DAYS -> amount * 24 * 60 * 60 * 1000L
+        WEEKS -> amount * 7 * 24 * 60 * 60 * 1000L
+        MONTHS -> amount * 30 * 24 * 60 * 60 * 1000L
+    }
+
+    fun fromMillis(millis: Long): Long = when (this) {
+        MINUTES -> millis / (1000 * 60)
+        HOURS -> millis / (1000 * 60 * 60)
+        DAYS -> millis / (1000 * 60 * 60 * 24)
+        WEEKS -> millis / (1000 * 60 * 60 * 24 * 7)
+        MONTHS -> millis / (1000L * 60 * 60 * 24 * 30)
+    }
+
 }

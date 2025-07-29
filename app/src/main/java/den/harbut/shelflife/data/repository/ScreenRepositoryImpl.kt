@@ -2,6 +2,7 @@ package den.harbut.shelflife.data.repository
 
 import den.harbut.shelflife.data.local.db.dao.ScreenDao
 import den.harbut.shelflife.data.local.db.entities.ScreenEntity
+import den.harbut.shelflife.domain.model.Product
 import den.harbut.shelflife.domain.model.Screen
 import den.harbut.shelflife.domain.repository.ScreenRepository
 import kotlinx.coroutines.flow.Flow
@@ -20,6 +21,10 @@ class ScreenRepositoryImpl @Inject constructor(
 
     override suspend fun addScreen(screen: Screen) =
         dao.insert(screen.toEntity())
+
+    override suspend fun updateScreen(screen: Screen) {
+        dao.update(screen.toEntity())
+    }
 
     override suspend fun deleteScreen(screenId: Long) =
         dao.delete(screenId)

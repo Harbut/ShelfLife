@@ -1,9 +1,16 @@
 package den.harbut.shelflife.presentation.ui.screens.editing
 
+import android.app.Activity
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import com.google.accompanist.pager.HorizontalPager
+import com.google.accompanist.pager.HorizontalPagerIndicator
+import com.google.accompanist.pager.rememberPagerState
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Group
+import androidx.compose.material.icons.filled.Save
 import androidx.compose.material.icons.filled.ScreenShare
 import androidx.compose.material.icons.filled.Timer
 import androidx.compose.material3.*
@@ -11,6 +18,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import den.harbut.shelflife.domain.model.Group
 import den.harbut.shelflife.domain.model.Screen
@@ -27,9 +35,14 @@ fun EditingScreen(
     screenViewModel: ScreenViewModel,
     groupViewModel: GroupViewModel,
     timerViewModel: TimerViewModel,
-    productViewModel: ProductViewModel
+    productViewModel: ProductViewModel,
+    modifier: Modifier
 ) {
-    val scope = rememberCoroutineScope()
+
+    val screens by screenViewModel.screens.collectAsState()
+    val pagerState = rememberPagerState()
+    val coroutineScope = rememberCoroutineScope()
+
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     var sheetContent by remember { mutableStateOf<@Composable () -> Unit>({}) }
     var showSheet by remember { mutableStateOf(false) }
@@ -77,10 +90,39 @@ fun EditingScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Editing") },
+                title = {
+                    val current = screens.getOrNull(pagerState.currentPage)
+                    Text(
+                        text = current?.name ?: "Screen",
+                        modifier = Modifier.clickable {
+                            current?.let { screen ->
+                                sheetContent = {
+                                    CreateScreenForm(
+                                        onSubmit = {
+                                            screenViewModel.addScreen(screen.copy(name = it))
+                                            showSheet = false
+                                        },
+                                        onDismiss = { showSheet = false }
+                                    )
+                                }
+                                showSheet = true
+                            }
+                        }
+                    )
+                },
+                navigationIcon = {
+                    val context = LocalContext.current
+                    IconButton(onClick = {
+                        if (context is Activity) context.finish()
+                    }) {
+                        Icon(Icons.Default.ArrowBack, contentDescription = "Назад")
+                    }
+                },
                 actions = {
-                    IconButton(onClick = { /* Optional edit action */ }) {
-                        Icon(Icons.Default.Edit, contentDescription = "Edit")
+                    IconButton(onClick = {
+                        // TODO: логіка збереження, якщо треба
+                    }) {
+                        Icon(Icons.Default.Save, contentDescription = "Зберегти")
                     }
                 }
             )
@@ -89,17 +131,31 @@ fun EditingScreen(
             ExpandableFab(fabItems)
         }
     ) { padding ->
-        Box(modifier = Modifier.padding(padding).fillMaxSize()) {
-            Text("Editing screen content goes here", modifier = Modifier.align(Alignment.Center))
+        Column(Modifier.padding(padding)) {
+            HorizontalPager(
+                count = screens.size,
+                state = pagerState,
+                modifier = Modifier.weight(1f)
+            ) { page ->
+                // Тут буде контент сторінки
+                Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                    Text(text = screens[page].name)
+                }
+            }
+
+            // індикатор сторінок
+            HorizontalPagerIndicator(
+                pagerState = pagerState,
+                modifier = Modifier.align(Alignment.CenterHorizontally).padding(8.dp)
+            )
         }
 
         if (showSheet) {
             ModalBottomSheet(
                 onDismissRequest = { showSheet = false },
-                sheetState = sheetState
-            ) {
-                sheetContent()
-            }
+                sheetState = sheetState,
+                content = { sheetContent() }
+            )
         }
     }
 }

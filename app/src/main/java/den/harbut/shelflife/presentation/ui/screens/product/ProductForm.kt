@@ -17,11 +17,16 @@ fun ProductForm(
     onCancel: () -> Unit
 ) {
     var name by remember { mutableStateOf(product?.name ?: "") }
-    var shelfLife by remember { mutableStateOf(product?.shelfLife?.toString() ?: "") }
     var timeUnit by remember { mutableStateOf(product?.timeUnit ?: TimeUnit.HOURS) }
+    var shelfLife by remember {
+        mutableStateOf(
+            product?.let { timeUnit.fromMillis(it.shelfLife).toString() } ?: ""
+        )
+    }
 
     var nameError by remember { mutableStateOf(false) }
     var shelfLifeError by remember { mutableStateOf(false) }
+    var expanded by remember { mutableStateOf(false) }
 
     Column(modifier = Modifier.padding(16.dp)) {
         Text(
@@ -48,7 +53,7 @@ fun ProductForm(
                 value = shelfLife,
                 onValueChange = {
                     shelfLife = it
-                    shelfLifeError = it.toIntOrNull()?.let { v -> v < 1 } ?: true
+                    shelfLifeError = it.toLongOrNull()?.let { v -> v < 1 } ?: true
                 },
                 label = { Text("Shelf life") },
                 isError = shelfLifeError,
@@ -57,12 +62,11 @@ fun ProductForm(
 
             Spacer(modifier = Modifier.width(8.dp))
 
-            val timeUnits = TimeUnit.values()
-            var expanded by remember { mutableStateOf(false) }
-
-            Box(modifier = Modifier
-                .weight(1f)
-                .clickable { expanded = true }) {
+            Box(
+                modifier = Modifier
+                    .weight(1f)
+                    .clickable { expanded = true }
+            ) {
                 OutlinedTextField(
                     value = timeUnit.name.lowercase().replaceFirstChar(Char::titlecase),
                     onValueChange = {},
@@ -75,7 +79,7 @@ fun ProductForm(
                     expanded = expanded,
                     onDismissRequest = { expanded = false }
                 ) {
-                    timeUnits.forEach {
+                    TimeUnit.values().forEach {
                         DropdownMenuItem(
                             text = { Text(it.name.lowercase().replaceFirstChar(Char::titlecase)) },
                             onClick = {
@@ -90,10 +94,17 @@ fun ProductForm(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
             Button(
                 onClick = {
-                    if (product != null && onDelete != null) onDelete() else onCancel()
+                    if (product != null && onDelete != null) {
+                        onDelete()
+                    } else {
+                        onCancel()
+                    }
                 },
                 colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.error)
             ) {
@@ -103,12 +114,13 @@ fun ProductForm(
             Button(
                 onClick = {
                     nameError = name.isBlank()
-                    shelfLifeError = shelfLife.toIntOrNull()?.let { it < 1 } ?: true
+                    shelfLifeError = shelfLife.toLongOrNull()?.let { it < 1 } ?: true
 
                     if (!nameError && !shelfLifeError) {
+                        val millis = timeUnit.toMillis(shelfLife.toLong())
                         onSubmit(
-                            product?.copy(name = name, shelfLife = shelfLife.toLong(), timeUnit = timeUnit)
-                                ?: Product(name = name, shelfLife = shelfLife.toLong(), timeUnit = timeUnit)
+                            product?.copy(name = name, shelfLife = millis, timeUnit = timeUnit)
+                                ?: Product(name = name, shelfLife = millis, timeUnit = timeUnit)
                         )
                     }
                 },
@@ -119,4 +131,3 @@ fun ProductForm(
         }
     }
 }
-

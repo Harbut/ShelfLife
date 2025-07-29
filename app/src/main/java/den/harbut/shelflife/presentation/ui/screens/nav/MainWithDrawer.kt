@@ -1,15 +1,19 @@
 package den.harbut.shelflife.presentation.ui.screens.nav
 
+import android.content.Intent
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.currentBackStackEntryAsState
 import den.harbut.shelflife.presentation.navigation.AppNavHost
 import den.harbut.shelflife.presentation.ui.components.DrawerItem
+import den.harbut.shelflife.presentation.ui.screens.editing.EditingActivity
 import den.harbut.shelflife.presentation.viewmodel.*
 import kotlinx.coroutines.launch
 
@@ -22,8 +26,12 @@ fun MainWithDrawer(
     screenViewModel: ScreenViewModel,
     productViewModel: ProductViewModel
 ) {
+    val context = LocalContext.current
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
+
+    val currentBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentRoute = currentBackStackEntry?.destination?.route
 
     val drawerItems = listOf(
         DrawerItem("Main", Icons.Default.Home, "main"),
@@ -61,6 +69,16 @@ fun MainWithDrawer(
                     navigationIcon = {
                         IconButton(onClick = { scope.launch { drawerState.open() } }) {
                             Icon(Icons.Default.Menu, contentDescription = "Menu")
+                        }
+                    },
+                    actions = {
+                        if (currentRoute == "main") {
+                            IconButton(onClick = {
+                                val intent = Intent(context, EditingActivity::class.java)
+                                context.startActivity(intent)
+                            }) {
+                                Icon(Icons.Default.Edit, contentDescription = "Edit")
+                            }
                         }
                     }
                 )

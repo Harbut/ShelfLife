@@ -31,18 +31,6 @@ fun AppNavHost(
                 timerViewModel = timerViewModel,
                 groupViewModel = groupViewModel,
                 screenViewModel = screenViewModel,
-                onEditClick = {
-                    navController.navigate("editing")
-                }
-            )
-        }
-
-        composable("editing") {
-            EditingScreen(
-                timerViewModel = timerViewModel,
-                groupViewModel = groupViewModel,
-                screenViewModel = screenViewModel,
-                productViewModel = productViewModel
             )
         }
 

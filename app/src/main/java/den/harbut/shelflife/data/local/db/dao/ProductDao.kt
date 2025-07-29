@@ -3,6 +3,7 @@ package den.harbut.shelflife.data.local.db.dao
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
+import androidx.room.Update
 import den.harbut.shelflife.data.local.db.entities.ProductEntity
 import kotlinx.coroutines.flow.Flow
 
@@ -16,6 +17,9 @@ interface ProductDao {
 
     @Insert
     suspend fun insert(product: ProductEntity)
+
+    @Update
+    suspend fun update(product: ProductEntity)
 
     @Query("DELETE FROM products WHERE id = :id")
     suspend fun delete(id: Long)

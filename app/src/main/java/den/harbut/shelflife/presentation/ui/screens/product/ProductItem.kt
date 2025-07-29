@@ -27,7 +27,7 @@ fun ProductItem(
         ) {
             Column(modifier = Modifier.weight(1f)) {
                 Text(text = product.name, style = MaterialTheme.typography.titleMedium)
-                val minutes = product.defaultShelfLifeMillis / 60_000
+                val minutes = product.shelfLife / 60_000
                 Text(text = "Зберігати: $minutes хв", style = MaterialTheme.typography.bodySmall)
             }
             IconButton(onClick = { onDelete(product) }) {

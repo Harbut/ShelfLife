@@ -19,47 +19,30 @@ fun MainScreen(
     screenId: Long = 1L,
     timerViewModel: TimerViewModel,
     groupViewModel: GroupViewModel,
-    screenViewModel: ScreenViewModel,
-    onEditClick: () -> Unit
+    screenViewModel: ScreenViewModel
 ) {
     val groups by groupViewModel.groups.collectAsState()
     val timers by timerViewModel.timers.collectAsState()
-    val screenName by remember { mutableStateOf("Сторінка 1") } // TODO: Заміни на screenViewModel.getName(screenId)
+    val screenName by remember { mutableStateOf("Сторінка 1") }
 
     LaunchedEffect(Unit) {
         groupViewModel.loadGroups(screenId)
     }
 
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text("ShelfLife — $screenName") },
-                actions = {
-                    IconButton(onClick = onEditClick) {
-                        Icon(
-                            imageVector = Icons.Default.Edit,
-                            contentDescription = "Edit"
-                        )
-                    }
-                }
-            )
-        }
-    ) { padding ->
-        LazyColumn(modifier = Modifier.padding(padding)) {
-            groups.forEach { group ->
-                item {
-                    Text(
-                        text = group.name,
-                        style = MaterialTheme.typography.titleMedium,
-                        modifier = Modifier.padding(8.dp)
-                    )
-                }
+    LazyColumn(modifier = Modifier.fillMaxSize()) {
+        groups.forEach { group ->
+            item {
+                Text(
+                    text = group.name,
+                    style = MaterialTheme.typography.titleMedium,
+                    modifier = Modifier.padding(8.dp)
+                )
+            }
 
-                val timersInGroup = timers.filter { it.groupId == group.id }
+            val timersInGroup = timers.filter { it.groupId == group.id }
 
-                items(timersInGroup.size) { index ->
-                    TimerCard(timer = timersInGroup[index])
-                }
+            items(timersInGroup.size) { index ->
+                TimerCard(timer = timersInGroup[index])
             }
         }
     }

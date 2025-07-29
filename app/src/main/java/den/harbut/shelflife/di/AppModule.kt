@@ -72,6 +72,8 @@ object AppModule {
     // Product use cases
     @Provides fun provideAddProductUseCase(repo: ProductRepository) = AddProductUseCase(repo)
     @Provides fun provideGetAllProductsUseCase(repo: ProductRepository) = GetAllProductsUseCase(repo)
+    @Provides fun provideGetProductByIdUseCase(repo: ProductRepository) = GetProductByIdUseCase(repo)
+    @Provides fun provideUpdateProductUseCase(repo: ProductRepository) = UpdateProductUseCase(repo)
     @Provides fun provideDeleteProductUseCase(repo: ProductRepository) = DeleteProductUseCase(repo)
 
     // Group use cases
@@ -90,13 +92,17 @@ object AppModule {
     ) = TimerViewModel(timerRepository)
 
     @Provides fun provideProductViewModel(
-        getAllProductsUseCase: GetAllProductsUseCase,
         addProductUseCase: AddProductUseCase,
-        deleteProductUseCase: DeleteProductUseCase
+        updateProductUseCase: UpdateProductUseCase,
+        deleteProductUseCase: DeleteProductUseCase,
+        getAllProductsUseCase: GetAllProductsUseCase,
+        getProductByIdUseCase: GetProductByIdUseCase
     ) = ProductViewModel(
-        getAllProductsUseCase,
         addProductUseCase,
-        deleteProductUseCase
+        updateProductUseCase,
+        deleteProductUseCase,
+        getAllProductsUseCase,
+        getProductByIdUseCase
     )
 
     @Provides fun provideGroupViewModel(

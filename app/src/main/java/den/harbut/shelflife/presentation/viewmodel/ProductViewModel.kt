@@ -7,15 +7,19 @@ import den.harbut.shelflife.domain.model.Product
 import den.harbut.shelflife.domain.usecase.product.AddProductUseCase
 import den.harbut.shelflife.domain.usecase.product.DeleteProductUseCase
 import den.harbut.shelflife.domain.usecase.product.GetAllProductsUseCase
+import den.harbut.shelflife.domain.usecase.product.GetProductByIdUseCase
+import den.harbut.shelflife.domain.usecase.product.UpdateProductUseCase
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class ProductViewModel @Inject constructor(
-    private val getAllProductsUseCase: GetAllProductsUseCase,
     private val addProductUseCase: AddProductUseCase,
-    private val deleteProductUseCase: DeleteProductUseCase
+    private val updateProductUseCase: UpdateProductUseCase,
+    private val deleteProductUseCase: DeleteProductUseCase,
+    private val getAllProductsUseCase: GetAllProductsUseCase,
+    private val getProductByIdUseCase: GetProductByIdUseCase
 ) : ViewModel() {
 
     private val _products = MutableStateFlow<List<Product>>(emptyList())
@@ -32,6 +36,12 @@ class ProductViewModel @Inject constructor(
     fun addProduct(product: Product) {
         viewModelScope.launch {
             addProductUseCase(product)
+        }
+    }
+
+    fun updateProduct(product: Product) {
+        viewModelScope.launch {
+            updateProductUseCase(product)
         }
     }
 

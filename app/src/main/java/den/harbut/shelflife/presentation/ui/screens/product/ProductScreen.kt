@@ -14,6 +14,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import den.harbut.shelflife.domain.model.Product
+import den.harbut.shelflife.domain.util.TimeUnit
 import den.harbut.shelflife.presentation.viewmodel.ProductViewModel
 import kotlinx.coroutines.launch
 
@@ -24,40 +25,71 @@ fun ProductScreen(
     openDrawer: () -> Unit
 ) {
     val products by productViewModel.products.collectAsState()
-    val scope = rememberCoroutineScope()
     var showSheet by remember { mutableStateOf(false) }
+    var selectedProduct by remember { mutableStateOf<Product?>(null) }
 
     Scaffold(
         floatingActionButton = {
-            FloatingActionButton(onClick = { showSheet = true }) {
+            FloatingActionButton(onClick = {
+                selectedProduct = null
+                showSheet = true
+            }) {
                 Icon(Icons.Default.Add, contentDescription = "Create New Product")
             }
         }
     ) { padding ->
         LazyColumn(modifier = Modifier.padding(padding)) {
             items(products) { product ->
-                ProductCard(product = product)
+                ProductCard(
+                    product = product,
+                    onEdit = {
+                        selectedProduct = product
+                        showSheet = true
+                    }
+                )
             }
         }
 
         if (showSheet) {
-            ProductForm(
-                onSubmit = { name, durationMillis ->
-                    productViewModel.addProduct(Product(name = name, defaultShelfLifeMillis = durationMillis))
+            ModalBottomSheet(
+                onDismissRequest = {
                     showSheet = false
-                },
-                onDismiss = { showSheet = false }
-            )
+                    selectedProduct = null
+                }
+            ) {
+                ProductForm(
+                    product = selectedProduct,
+                    onSubmit = { updatedProduct ->
+                        if (updatedProduct.id == 0L) {
+                            productViewModel.addProduct(updatedProduct)
+                        } else {
+                            productViewModel.updateProduct(updatedProduct)
+                        }
+                        showSheet = false
+                        selectedProduct = null
+                    },
+                    onDelete = {
+                        selectedProduct?.let { productViewModel.deleteProduct(it.id) }
+                        showSheet = false
+                        selectedProduct = null
+                    },
+                    onCancel = {
+                        showSheet = false
+                        selectedProduct = null
+                    }
+                )
+            }
         }
     }
 }
 
 @Composable
-fun ProductCard(product: Product) {
+fun ProductCard(product: Product, onEdit: () -> Unit) {
     Card(
         modifier = Modifier
             .padding(8.dp)
-            .fillMaxWidth(),
+            .fillMaxWidth()
+            .clickable { onEdit() },
         elevation = CardDefaults.cardElevation()
     ) {
         Row(
@@ -70,7 +102,21 @@ fun ProductCard(product: Product) {
                 Icon(Icons.Default.Edit, contentDescription = null, modifier = Modifier.padding(end = 8.dp))
                 Text(text = product.name)
             }
-            Text(text = "${product.defaultShelfLifeMillis / (1000 * 60 * 60)}h")
+
+            val duration = product.timeUnit.formatDuration(product.shelfLife)
+            Text(text = duration)
         }
     }
+}
+
+
+fun TimeUnit.formatDuration(millis: Long): String {
+    val amount = when (this) {
+        TimeUnit.MINUTES -> millis / (1000 * 60)
+        TimeUnit.HOURS -> millis / (1000 * 60 * 60)
+        TimeUnit.DAYS -> millis / (1000 * 60 * 60 * 24)
+        TimeUnit.WEEKS -> millis / (1000 * 60 * 60 * 24 * 7)
+        TimeUnit.MONTHS -> millis / (1000L * 60 * 60 * 24 * 30)
+    }
+    return "$amount ${this.name.lowercase().take(1)}"
 }

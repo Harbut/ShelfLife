@@ -35,6 +35,12 @@ class ScreenViewModel @Inject constructor(
         }
     }
 
+    fun updateScreen(updated: Screen) {
+        viewModelScope.launch {
+            screenRepository.updateScreen(updated)
+        }
+    }
+
     fun deleteScreen(screenId: Long) {
         viewModelScope.launch {
             deleteScreenUseCase(screenId)
@@ -44,5 +50,4 @@ class ScreenViewModel @Inject constructor(
     suspend fun getAllScreensOnce(): List<Screen> {
         return screenRepository.getAllScreens().first()
     }
-
 }

@@ -1,4 +1,4 @@
-package den.harbut.shelflife.data.local.db.converters
+package den.harbut.shelflife.data.local.db
 
 import androidx.room.TypeConverter
 import den.harbut.shelflife.domain.util.TimeUnit

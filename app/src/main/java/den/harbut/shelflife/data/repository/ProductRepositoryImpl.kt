@@ -4,6 +4,7 @@ import den.harbut.shelflife.data.local.db.dao.ProductDao
 import den.harbut.shelflife.data.local.db.entities.ProductEntity
 import den.harbut.shelflife.domain.model.Product
 import den.harbut.shelflife.domain.repository.ProductRepository
+import den.harbut.shelflife.domain.util.TimeUnit
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
@@ -21,10 +22,26 @@ class ProductRepositoryImpl @Inject constructor(
     override suspend fun addProduct(product: Product) =
         dao.insert(product.toEntity())
 
+    override suspend fun updateProduct(product: Product) {
+        dao.update(product.toEntity())
+    }
+
     override suspend fun deleteProduct(productId: Long) =
         dao.delete(productId)
 }
 
-// Mapper
-private fun ProductEntity.toDomain() = Product(id, name, defaultShelfLifeMillis)
-private fun Product.toEntity() = ProductEntity(id, name, defaultShelfLifeMillis)
+// 🧠 Мапери
+
+private fun ProductEntity.toDomain(): Product = Product(
+    id = id,
+    name = name,
+    shelfLife = defaultShelfLifeMillis,
+    timeUnit = timeUnit // ← нове поле
+)
+
+private fun Product.toEntity(): ProductEntity = ProductEntity(
+    id = id,
+    name = name,
+    defaultShelfLifeMillis = shelfLife,
+    timeUnit = timeUnit // ← нове поле
+)
