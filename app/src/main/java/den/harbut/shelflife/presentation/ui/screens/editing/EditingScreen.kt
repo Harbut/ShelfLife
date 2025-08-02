@@ -23,6 +23,7 @@ import androidx.compose.ui.unit.dp
 import den.harbut.shelflife.domain.model.Group
 import den.harbut.shelflife.domain.model.Screen
 import den.harbut.shelflife.domain.model.Timer
+import den.harbut.shelflife.presentation.ui.screens.editing.ui.theme.ScreenForm
 import den.harbut.shelflife.presentation.viewmodel.GroupViewModel
 import den.harbut.shelflife.presentation.viewmodel.ProductViewModel
 import den.harbut.shelflife.presentation.viewmodel.ScreenViewModel
@@ -49,15 +50,16 @@ fun EditingScreen(
 
     val fabItems = listOf(
         FabItem("Screen", Icons.Default.ScreenShare) {
-            sheetContent = { CreateScreenForm(
-                onSubmit = { name ->
-                    screenViewModel.addScreen(Screen(name = name))
-                    showSheet = false
-                },
-                onDismiss = {
-                    showSheet = false
-                }
-            )}
+            sheetContent = {
+                ScreenForm(
+                    onSubmit = { newScreen ->
+                        screenViewModel.addScreen(newScreen)
+                        showSheet = false
+                    },
+                    onCancel = { showSheet = false }
+                )
+            }
+
             showSheet = true
         },
         FabItem("Group", Icons.Default.Group) {
@@ -138,7 +140,22 @@ fun EditingScreen(
                 modifier = Modifier.weight(1f)
             ) { page ->
                 Column(horizontalAlignment = Alignment.CenterHorizontally){
-                    Text(text = screens[page].name)
+                    Text(text = screens[page].name, Modifier.clickable{
+                        sheetContent = {
+                            ScreenForm(
+                                screen = screens[page],
+                                onSubmit = { screen ->
+                                    screenViewModel.updateScreen(screen)
+                                    showSheet = false
+                                },
+                                onDelete = {
+                                    screenViewModel.deleteScreen(screens[page].id)
+                                    showSheet = false
+                                },
+                                onCancel = { showSheet = false }
+                            )
+                        }
+                        showSheet = true})
                     Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                         // Тут буде контент сторінки
                     }

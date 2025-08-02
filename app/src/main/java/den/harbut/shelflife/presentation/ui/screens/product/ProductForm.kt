@@ -30,7 +30,7 @@ fun ProductForm(
 
     Column(modifier = Modifier.padding(16.dp)) {
         Text(
-            text = "Create/Edit Product",
+            text = (if (product != null) "Edit Product" else "Create Product"),
             style = MaterialTheme.typography.titleLarge,
             modifier = Modifier.padding(bottom = 16.dp)
         )
