@@ -137,10 +137,12 @@ fun EditingScreen(
                 state = pagerState,
                 modifier = Modifier.weight(1f)
             ) { page ->
-                // Тут буде контент сторінки
-                Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                Column(horizontalAlignment = Alignment.CenterHorizontally){
                     Text(text = screens[page].name)
-                }
+                    Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                        // Тут буде контент сторінки
+                    }
+            }
             }
 
             // індикатор сторінок
